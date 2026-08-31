@@ -45,11 +45,16 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
-def _string_value(value: Any) -> str:
-    """Validate and normalize a required string."""
-    if not isinstance(value, str) or not (value := value.strip()):
-        raise vol.Invalid("Value must not be empty")
-    return value
+def _normalize_required_text(
+    data: dict[str, Any], key: str, errors: dict[str, str]
+) -> bool:
+    """Normalize a required text field after frontend schema validation."""
+    value = data.get(key)
+    if not isinstance(value, str) or not value.strip():
+        errors[key] = "required"
+        return False
+    data[key] = value.strip()
+    return True
 
 
 def _number_value(minimum: int, maximum: int) -> vol.All:
@@ -64,13 +69,13 @@ def _user_schema(defaults: dict[str, Any] | None = None) -> vol.Schema:
         {
             vol.Required(
                 CONF_NAME, default=defaults.get(CONF_NAME, DEFAULT_NAME)
-            ): _string_value,
+            ): TextSelector(),
             vol.Required(CONF_ACCESS_ID): TextSelector(
                 TextSelectorConfig(type=TextSelectorType.PASSWORD)
             ),
             vol.Required(
                 CONF_STOP_ID, default=defaults.get(CONF_STOP_ID, DEFAULT_STOP_ID)
-            ): _string_value,
+            ): TextSelector(),
             vol.Required(
                 CONF_MAX_JOURNEYS,
                 default=defaults.get(CONF_MAX_JOURNEYS, DEFAULT_MAX_JOURNEYS),
@@ -135,11 +140,11 @@ class MyStationConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors: dict[str, str] = {}
 
         if user_input is not None:
-            access_id = user_input.get(CONF_ACCESS_ID)
-            if not isinstance(access_id, str) or not access_id.strip():
-                errors["base"] = "invalid_auth"
-            else:
-                user_input[CONF_ACCESS_ID] = access_id.strip()
+            fields_valid = True
+            for key in (CONF_NAME, CONF_ACCESS_ID, CONF_STOP_ID):
+                if not _normalize_required_text(user_input, key, errors):
+                    fields_valid = False
+            if fields_valid:
                 try:
                     await _async_validate_input(self.hass, user_input)
                 except RejseplanenAuthenticationError:
@@ -177,11 +182,11 @@ class MyStationConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         entry = self._reauth_entry
 
         if user_input is not None and entry is not None:
-            access_id = user_input.get(CONF_ACCESS_ID)
-            if not isinstance(access_id, str) or not access_id.strip():
-                errors["base"] = "invalid_auth"
-            else:
-                updated_data = {**entry.data, CONF_ACCESS_ID: access_id.strip()}
+            if _normalize_required_text(user_input, CONF_ACCESS_ID, errors):
+                updated_data = {
+                    **entry.data,
+                    CONF_ACCESS_ID: user_input[CONF_ACCESS_ID],
+                }
                 try:
                     await _async_validate_input(self.hass, updated_data)
                 except RejseplanenAuthenticationError:

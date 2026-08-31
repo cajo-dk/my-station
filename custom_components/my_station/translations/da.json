@@ -7,6 +7,7 @@
     "error": {
       "cannot_connect": "Forbindelsen til Rejseplanen mislykkedes. Kontrollér stations-ID'et og prøv igen.",
       "invalid_auth": "Rejseplanen afviste adgangs-ID'et.",
+      "required": "Dette felt er påkrævet.",
       "unknown": "Uventet fejl. Kontrollér Home Assistant-loggen."
     },
     "step": {

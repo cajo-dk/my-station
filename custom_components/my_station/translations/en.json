@@ -7,6 +7,7 @@
     "error": {
       "cannot_connect": "Failed to connect to Rejseplanen. Check the station ID and try again.",
       "invalid_auth": "The Rejseplanen access ID was rejected.",
+      "required": "This field is required.",
       "unknown": "Unexpected error. Check the Home Assistant logs."
     },
     "step": {
