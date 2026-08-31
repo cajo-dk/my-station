@@ -1,13 +1,13 @@
 {
+  "domain": "my_station",
+  "name": "My Station",
   "codeowners": ["@cajo-dk"],
   "config_flow": true,
   "dependencies": ["http"],
   "documentation": "https://github.com/cajo-dk/my-station",
-  "domain": "my_station",
   "integration_type": "service",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/cajo-dk/my-station/issues",
-  "name": "My Station",
   "requirements": [],
   "version": "1.0.0"
 }
