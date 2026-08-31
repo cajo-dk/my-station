@@ -1,0 +1,54 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "Denne station er allerede konfigureret.",
+      "reauth_successful": "Godkendelsen blev opdateret."
+    },
+    "error": {
+      "cannot_connect": "Forbindelsen til Rejseplanen mislykkedes. Kontrollér stations-ID'et og prøv igen.",
+      "invalid_auth": "Rejseplanen afviste adgangs-ID'et.",
+      "unknown": "Uventet fejl. Kontrollér Home Assistant-loggen."
+    },
+    "step": {
+      "reauth_confirm": {
+        "data": {
+          "access_id": "Adgangs-ID"
+        },
+        "description": "Indtast et gyldigt adgangs-ID til Rejseplanens API.",
+        "title": "Godkend My Station igen"
+      },
+      "user": {
+        "data": {
+          "access_id": "Adgangs-ID",
+          "duration": "Afgangsvindue (minutter)",
+          "max_journeys": "Maksimalt antal afgange",
+          "name": "Navn",
+          "stop_id": "Stations-/stoppesteds-ID",
+          "update_interval_minutes": "Opdateringsinterval (minutter)"
+        },
+        "description": "Konfigurér en afgangstavle fra Rejseplanen. Alle felter er påkrævede.",
+        "title": "Tilføj My Station"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "departures": {
+        "name": "Afgange"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "duration": "Afgangsvindue (minutter)",
+          "max_journeys": "Maksimalt antal afgange",
+          "update_interval_minutes": "Opdateringsinterval (minutter)"
+        },
+        "description": "Ændringerne anvendes, når integrationen er genindlæst.",
+        "title": "Indstillinger for My Station"
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+name: My Station
+repository: cajo-dk/my-station
+url: https://github.com/cajo-dk/my-station
+category: integration
+domain: my_station
+country: DK
+homeassistant: 2024.7.0
+description: Rejseplanen departures integration with a bundled Lovelace card.
+maintainer: cajo-dk

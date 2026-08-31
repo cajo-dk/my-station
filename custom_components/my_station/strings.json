@@ -1,0 +1,54 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "This station is already configured.",
+      "reauth_successful": "Reauthentication was successful."
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to Rejseplanen. Check the station ID and try again.",
+      "invalid_auth": "The Rejseplanen access ID was rejected.",
+      "unknown": "Unexpected error. Check the Home Assistant logs."
+    },
+    "step": {
+      "reauth_confirm": {
+        "data": {
+          "access_id": "Access ID"
+        },
+        "description": "Enter a valid Rejseplanen API access ID.",
+        "title": "Reauthenticate My Station"
+      },
+      "user": {
+        "data": {
+          "access_id": "Access ID",
+          "duration": "Departure window (minutes)",
+          "max_journeys": "Maximum journeys",
+          "name": "Name",
+          "stop_id": "Station/stop ID",
+          "update_interval_minutes": "Update interval (minutes)"
+        },
+        "description": "Configure a Rejseplanen departure board. All fields are required.",
+        "title": "Add My Station"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "departures": {
+        "name": "Departures"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "duration": "Departure window (minutes)",
+          "max_journeys": "Maximum journeys",
+          "update_interval_minutes": "Update interval (minutes)"
+        },
+        "description": "Changes are applied after the integration reloads.",
+        "title": "My Station options"
+      }
+    }
+  }
+}
