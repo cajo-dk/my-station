@@ -44,7 +44,7 @@ All setup fields are required. The setup flow verifies the credentials and stati
 | Departure window | 60 minutes | 1-1440 | How far ahead to request |
 | Update interval | 60 minutes | 1-1440 | Coordinator polling interval |
 
-To change the result size, departure window, or polling interval later, open the integration entry and select **Configure**. Authentication failures start Home Assistant's reauthentication flow; other request failures mark the sensor unavailable while the coordinator retries normally.
+To change the result size, departure window, or polling interval later, open the integration entry and select **Configure**. To change the API access ID or station/stop ID, select **Reconfigure** from the integration entry's menu. Leave the API key blank during reconfiguration to retain its current value. Authentication failures start Home Assistant's reauthentication flow; other request failures mark the sensor unavailable while the coordinator retries normally.
 
 One integration instance is allowed per station/stop ID.
 

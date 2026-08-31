@@ -2,15 +2,25 @@
   "config": {
     "abort": {
       "already_configured": "This station is already configured.",
-      "reauth_successful": "Reauthentication was successful."
+      "reauth_successful": "Reauthentication was successful.",
+      "reconfigure_successful": "The connection settings were updated."
     },
     "error": {
+      "already_configured": "This station is already configured.",
       "cannot_connect": "Failed to connect to Rejseplanen. Check the station ID and try again.",
       "invalid_auth": "The Rejseplanen access ID was rejected.",
       "required": "This field is required.",
       "unknown": "Unexpected error. Check the Home Assistant logs."
     },
     "step": {
+      "reconfigure": {
+        "data": {
+          "access_id": "API key (access ID)",
+          "stop_id": "Station/stop ID"
+        },
+        "description": "Change the Rejseplanen connection settings. Leave the API key blank to keep the current value.",
+        "title": "Reconfigure My Station"
+      },
       "reauth_confirm": {
         "data": {
           "access_id": "Access ID"

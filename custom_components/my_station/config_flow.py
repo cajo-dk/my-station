@@ -116,6 +116,18 @@ def _options_schema(defaults: dict[str, Any]) -> vol.Schema:
     )
 
 
+def _reconfigure_schema(stop_id: str) -> vol.Schema:
+    """Return the schema for editable connection settings."""
+    return vol.Schema(
+        {
+            vol.Optional(CONF_ACCESS_ID): TextSelector(
+                TextSelectorConfig(type=TextSelectorType.PASSWORD)
+            ),
+            vol.Required(CONF_STOP_ID, default=stop_id): TextSelector(),
+        }
+    )
+
+
 async def _async_validate_input(hass: HomeAssistant, data: dict[str, Any]) -> None:
     """Verify credentials and station settings against Rejseplanen."""
     client = RejseplanenApiClient(async_get_clientsession(hass))
@@ -167,6 +179,63 @@ class MyStationConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
+    async def async_step_reconfigure(
+        self, user_input: dict[str, Any] | None = None
+    ):
+        """Allow the API access ID and station ID to be changed."""
+        entry = self.hass.config_entries.async_get_entry(self.context["entry_id"])
+        assert entry is not None
+        errors: dict[str, str] = {}
+
+        if user_input is not None and _normalize_required_text(
+            user_input, CONF_STOP_ID, errors
+        ):
+            updated_data = dict(entry.data)
+            access_id = user_input.get(CONF_ACCESS_ID)
+            if isinstance(access_id, str) and access_id.strip():
+                updated_data[CONF_ACCESS_ID] = access_id.strip()
+            updated_data[CONF_STOP_ID] = user_input[CONF_STOP_ID]
+
+            duplicate = any(
+                configured.entry_id != entry.entry_id
+                and (
+                    configured.unique_id == updated_data[CONF_STOP_ID]
+                    or configured.data.get(CONF_STOP_ID)
+                    == updated_data[CONF_STOP_ID]
+                )
+                for configured in self._async_current_entries()
+            )
+            if duplicate:
+                errors["base"] = "already_configured"
+            else:
+                validation_data = {**updated_data, **entry.options}
+                try:
+                    await _async_validate_input(self.hass, validation_data)
+                except RejseplanenAuthenticationError:
+                    errors["base"] = "invalid_auth"
+                except RejseplanenConnectionError:
+                    errors["base"] = "cannot_connect"
+                except Exception:  # noqa: BLE001 - config flows must show a form
+                    _LOGGER.exception("Unexpected exception reconfiguring My Station")
+                    errors["base"] = "unknown"
+                else:
+                    return self.async_update_reload_and_abort(
+                        entry,
+                        data=updated_data,
+                        unique_id=updated_data[CONF_STOP_ID],
+                        reason="reconfigure_successful",
+                    )
+
+        return self.async_show_form(
+            step_id="reconfigure",
+            data_schema=_reconfigure_schema(
+                user_input.get(CONF_STOP_ID, entry.data[CONF_STOP_ID])
+                if user_input is not None
+                else entry.data[CONF_STOP_ID]
+            ),
+            errors=errors,
+        )
+
     async def async_step_reauth(self, _entry_data: dict[str, Any]):
         """Start reauthentication."""
         self._reauth_entry = self.hass.config_entries.async_get_entry(
@@ -199,11 +268,11 @@ class MyStationConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     )
                     errors["base"] = "unknown"
                 else:
-                    self.hass.config_entries.async_update_entry(
-                        entry, data=updated_data
+                    return self.async_update_reload_and_abort(
+                        entry,
+                        data=updated_data,
+                        reason="reauth_successful",
                     )
-                    await self.hass.config_entries.async_reload(entry.entry_id)
-                    return self.async_abort(reason="reauth_successful")
 
         return self.async_show_form(
             step_id="reauth_confirm",

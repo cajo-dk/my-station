@@ -119,6 +119,7 @@ class MyStationCard extends HTMLElement {
           ? String(state.attributes.updated)
           : new Intl.DateTimeFormat(this._hass?.locale?.language || undefined, {
               hour: "2-digit",
+              hourCycle: "h23",
               minute: "2-digit",
             }).format(date);
         footer.textContent = `${labels.updated}: ${value}`;
@@ -249,7 +250,7 @@ class MyStationCard extends HTMLElement {
         font-size: 0.9rem;
       }
       th {
-        color: var(--secondary-text-color);
+        color: var(--accent-color);
         font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
@@ -311,7 +312,7 @@ class MyStationCard extends HTMLElement {
       .status.on_time {
         background: rgba(67, 160, 71, 0.2);
         background: color-mix(in srgb, var(--success-color, #43a047) 20%, transparent);
-        color: var(--success-color, #43a047);
+        color: #fff;
       }
       .message {
         padding: 20px 0;
@@ -320,7 +321,7 @@ class MyStationCard extends HTMLElement {
       }
       .footer {
         padding-top: 8px;
-        color: var(--secondary-text-color);
+        color: var(--accent-color);
         font-size: 0.72rem;
         text-align: right;
       }

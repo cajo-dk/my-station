@@ -2,15 +2,25 @@
   "config": {
     "abort": {
       "already_configured": "Denne station er allerede konfigureret.",
-      "reauth_successful": "Godkendelsen blev opdateret."
+      "reauth_successful": "Godkendelsen blev opdateret.",
+      "reconfigure_successful": "Forbindelsesindstillingerne blev opdateret."
     },
     "error": {
+      "already_configured": "Denne station er allerede konfigureret.",
       "cannot_connect": "Forbindelsen til Rejseplanen mislykkedes. Kontrollér stations-ID'et og prøv igen.",
       "invalid_auth": "Rejseplanen afviste adgangs-ID'et.",
       "required": "Dette felt er påkrævet.",
       "unknown": "Uventet fejl. Kontrollér Home Assistant-loggen."
     },
     "step": {
+      "reconfigure": {
+        "data": {
+          "access_id": "API-nøgle (adgangs-ID)",
+          "stop_id": "Stations-/stoppesteds-ID"
+        },
+        "description": "Redigér forbindelsen til Rejseplanen. Lad API-nøglen være tom for at beholde den nuværende værdi.",
+        "title": "Konfigurér My Station igen"
+      },
       "reauth_confirm": {
         "data": {
           "access_id": "Adgangs-ID"
