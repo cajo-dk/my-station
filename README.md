@@ -92,6 +92,8 @@ Add the card in YAML mode:
 type: custom:my-station-card
 entity: sensor.my_station_departures
 title: Herfølge St. - Departures
+icon: mdi:train
+icon_size: 30
 max_rows: 8
 show_status: true
 show_updated: true
@@ -103,9 +105,14 @@ Card options:
 | --- | --- | --- | --- |
 | `entity` | yes | none | My Station sensor entity ID |
 | `title` | no | Departures | Card heading; use an empty string to hide it |
+| `icon` | no | `mdi:train` | Icon shown to the left of the title; use an empty string to hide it |
+| `icon_size` | no | 30 | Icon size in pixels, from 1 to 100 |
 | `max_rows` | no | 8 | Rows to display, from 1 to 100 |
 | `show_status` | no | `true` | Show the status badge column |
 | `show_updated` | no | `true` | Show the payload update time |
+
+When Rejseplanen supplies a service message for a departure, the card displays it
+on a full-width line directly below that departure.
 
 The development source lives at `custom_cards/my-station-card/my-station-card.js`. An identical copy is packaged at `custom_components/my_station/frontend/my-station-card.js` because HACS integration repositories install runtime files from the integration directory.
 

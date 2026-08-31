@@ -12,7 +12,13 @@ class MyStationCard extends HTMLElement {
         entityId.startsWith("sensor.") &&
         Array.isArray(hass.states[entityId]?.attributes?.items)
     );
-    return { entity: entity || "", title: "Departures", max_rows: 8 };
+    return {
+      entity: entity || "",
+      title: "Departures",
+      icon: "mdi:train",
+      icon_size: 30,
+      max_rows: 8,
+    };
   }
 
   setConfig(config) {
@@ -25,12 +31,21 @@ class MyStationCard extends HTMLElement {
       throw new Error("max_rows must be an integer from 1 to 100");
     }
 
+    const iconSize = Number(config.icon_size ?? 30);
+    if (!Number.isInteger(iconSize) || iconSize < 1 || iconSize > 100) {
+      throw new Error("icon_size must be an integer from 1 to 100");
+    }
+
+    const icon = config.icon === undefined ? "mdi:train" : String(config.icon).trim();
+
     this._config = {
       title: "Departures",
       show_status: true,
       show_updated: true,
       ...config,
       entity: config.entity.trim(),
+      icon,
+      icon_size: iconSize,
       max_rows: maxRows,
     };
     this._render();
@@ -97,7 +112,21 @@ class MyStationCard extends HTMLElement {
     if (this._config.title) {
       const header = document.createElement("div");
       header.className = "card-header";
-      header.textContent = this._config.title;
+
+      if (this._config.icon) {
+        const icon = document.createElement("ha-icon");
+        icon.className = "title-icon";
+        icon.setAttribute("icon", this._config.icon);
+        icon.style.setProperty(
+          "--my-station-title-icon-size",
+          `${this._config.icon_size}px`
+        );
+        header.append(icon);
+      }
+
+      const title = document.createElement("span");
+      title.textContent = this._config.title;
+      header.append(title);
       wrapper.append(header);
     }
 
@@ -158,8 +187,11 @@ class MyStationCard extends HTMLElement {
     const body = document.createElement("tbody");
     for (const item of items) {
       const row = document.createElement("tr");
-      if (item.serviceMessage) {
-        row.title = String(item.serviceMessage);
+      const serviceMessage =
+        typeof item.serviceMessage === "string" ? item.serviceMessage.trim() : "";
+      if (serviceMessage) {
+        row.className = "has-info";
+        row.title = serviceMessage;
       }
 
       row.append(this._timeCell(item));
@@ -184,6 +216,16 @@ class MyStationCard extends HTMLElement {
       }
 
       body.append(row);
+
+      if (serviceMessage) {
+        const infoRow = document.createElement("tr");
+        infoRow.className = "departure-info-row";
+        const infoCell = document.createElement("td");
+        infoCell.colSpan = headings.length;
+        infoCell.textContent = serviceMessage;
+        infoRow.append(infoCell);
+        body.append(infoRow);
+      }
     }
     table.append(body);
     return table;
@@ -231,10 +273,19 @@ class MyStationCard extends HTMLElement {
         padding: 0 16px 12px;
       }
       .card-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
         padding: 16px 0 8px;
-        font-size: var(--ha-card-header-font-size, 24px);
+        font-size: calc(var(--ha-card-header-font-size, 24px) + 2px);
         font-weight: 500;
         line-height: 1.2;
+      }
+      .title-icon {
+        flex: 0 0 auto;
+        width: var(--my-station-title-icon-size, 30px);
+        height: var(--my-station-title-icon-size, 30px);
+        --mdc-icon-size: var(--my-station-title-icon-size, 30px);
       }
       table {
         width: 100%;
@@ -247,11 +298,11 @@ class MyStationCard extends HTMLElement {
         border-bottom: 1px solid var(--divider-color);
         text-align: left;
         vertical-align: middle;
-        font-size: 0.9rem;
+        font-size: calc(0.9rem + 2px);
       }
       th {
         color: var(--accent-color);
-        font-size: 0.75rem;
+        font-size: calc(0.75rem + 2px);
         font-weight: 600;
         text-transform: uppercase;
       }
@@ -266,6 +317,16 @@ class MyStationCard extends HTMLElement {
       tbody tr:last-child td {
         border-bottom: 0;
       }
+      tbody tr.has-info td {
+        padding-bottom: 2px;
+        border-bottom: 0;
+      }
+      .departure-info-row td {
+        padding-top: 0;
+        color: var(--secondary-text-color);
+        font-size: calc(0.78rem + 2px);
+        white-space: normal;
+      }
       .time {
         width: 1%;
         white-space: nowrap;
@@ -274,8 +335,8 @@ class MyStationCard extends HTMLElement {
       }
       .planned {
         margin-left: 6px;
-        color: var(--secondary-text-color);
-        font-size: 0.78rem;
+        color: #ffeb3b;
+        font-size: calc(0.78rem + 2px);
         font-weight: 400;
         text-decoration: line-through;
       }
@@ -296,40 +357,38 @@ class MyStationCard extends HTMLElement {
         padding: 3px 7px;
         border-radius: 999px;
         white-space: nowrap;
-        font-size: 0.72rem;
+        font-size: calc(0.72rem + 2px);
         font-weight: 600;
       }
       .status.delayed {
-        background: rgba(255, 152, 0, 0.2);
-        background: color-mix(in srgb, var(--warning-color, #ff9800) 20%, transparent);
-        color: var(--warning-color, #ff9800);
+        background: #ffeb3b;
+        color: #000;
       }
       .status.cancelled {
-        background: rgba(219, 68, 55, 0.2);
-        background: color-mix(in srgb, var(--error-color, #db4437) 20%, transparent);
-        color: var(--error-color, #db4437);
+        background: #d32f2f;
+        color: #fff;
       }
       .status.on_time {
-        background: rgba(67, 160, 71, 0.2);
-        background: color-mix(in srgb, var(--success-color, #43a047) 20%, transparent);
+        background: #006400;
         color: #fff;
       }
       .message {
         padding: 20px 0;
         color: var(--secondary-text-color);
+        font-size: calc(1rem + 2px);
         text-align: center;
       }
       .footer {
         padding-top: 8px;
         color: var(--accent-color);
-        font-size: 0.72rem;
+        font-size: calc(0.72rem + 2px);
         text-align: right;
       }
       @media (max-width: 520px) {
         th,
         td {
           padding: 6px 4px;
-          font-size: 0.82rem;
+          font-size: calc(0.82rem + 2px);
         }
         .status {
           padding: 2px 5px;
