@@ -139,14 +139,18 @@ class MyStationCard extends HTMLElement {
       wrapper.append(header);
     }
 
+    const content = document.createElement("div");
+    content.className = "departure-content";
+    wrapper.append(content);
+
     if (!state || state.state === "unavailable" || state.state === "unknown") {
-      wrapper.append(this._message(labels.unavailable));
+      content.append(this._message(labels.unavailable));
     } else {
       const items = this._departureItems().slice(0, this._config.max_rows);
       if (items.length === 0) {
-        wrapper.append(this._message(labels.empty));
+        content.append(this._message(labels.empty));
       } else {
-        wrapper.append(this._table(items, labels));
+        content.append(this._table(items, labels));
       }
 
       if (this._config.show_updated && state.attributes.updated) {
@@ -288,15 +292,22 @@ class MyStationCard extends HTMLElement {
         flex-direction: column;
       }
       .wrapper {
-        position: relative;
         flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
         width: 100%;
         min-height: 0;
         box-sizing: border-box;
         padding: 0 16px 12px;
       }
       .wrapper.has-footer {
-        padding-bottom: 48px;
+        padding-right: 20px;
+        padding-bottom: 20px;
+      }
+      .departure-content {
+        flex: 0 1 auto;
+        min-height: 0;
+        overflow-y: auto;
       }
       .card-header {
         display: flex;
@@ -405,9 +416,10 @@ class MyStationCard extends HTMLElement {
         text-align: center;
       }
       .footer {
-        position: absolute;
-        right: 20px;
-        bottom: 20px;
+        flex: 0 0 auto;
+        align-self: flex-end;
+        margin-top: auto;
+        padding-top: 8px;
         color: var(--accent-color);
         font-size: calc(0.72rem + 2px);
         text-align: right;
