@@ -114,6 +114,10 @@ Card options:
 When Rejseplanen supplies a service message for a departure, the card displays it
 on a full-width line directly below that departure.
 
+The card supports Home Assistant section-view `grid_options`. Its background
+expands to fill explicitly configured rows and columns; without overrides, its
+height remains automatic.
+
 The development source lives at `custom_cards/my-station-card/my-station-card.js`. An identical copy is packaged at `custom_components/my_station/frontend/my-station-card.js` because HACS integration repositories install runtime files from the integration directory.
 
 ## Development validation

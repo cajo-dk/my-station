@@ -61,6 +61,15 @@ class MyStationCard extends HTMLElement {
     return Math.max(2, Math.min(count, this._config?.max_rows || 8) + 1);
   }
 
+  getGridOptions() {
+    return {
+      columns: 12,
+      rows: "auto",
+      min_columns: 3,
+      min_rows: 2,
+    };
+  }
+
   _departureItems() {
     if (!this._hass || !this._config) {
       return [];
@@ -265,11 +274,23 @@ class MyStationCard extends HTMLElement {
     style.textContent = `
       :host {
         display: block;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
       }
       ha-card {
         overflow: hidden;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
       }
       .wrapper {
+        flex: 1 1 auto;
+        width: 100%;
+        min-height: 0;
+        box-sizing: border-box;
         padding: 0 16px 12px;
       }
       .card-header {
@@ -323,7 +344,7 @@ class MyStationCard extends HTMLElement {
       }
       .departure-info-row td {
         padding-top: 0;
-        color: var(--secondary-text-color);
+        color: #ff9800;
         font-size: calc(0.78rem + 2px);
         white-space: normal;
       }
@@ -355,7 +376,7 @@ class MyStationCard extends HTMLElement {
       .status {
         display: inline-block;
         padding: 3px 7px;
-        border-radius: 999px;
+        border-radius: 3px;
         white-space: nowrap;
         font-size: calc(0.72rem + 2px);
         font-weight: 600;
