@@ -150,6 +150,7 @@ class MyStationCard extends HTMLElement {
       }
 
       if (this._config.show_updated && state.attributes.updated) {
+        wrapper.classList.add("has-footer");
         const footer = document.createElement("div");
         footer.className = "footer";
         const date = new Date(state.attributes.updated);
@@ -287,11 +288,15 @@ class MyStationCard extends HTMLElement {
         flex-direction: column;
       }
       .wrapper {
+        position: relative;
         flex: 1 1 auto;
         width: 100%;
         min-height: 0;
         box-sizing: border-box;
         padding: 0 16px 12px;
+      }
+      .wrapper.has-footer {
+        padding-bottom: 48px;
       }
       .card-header {
         display: flex;
@@ -400,7 +405,9 @@ class MyStationCard extends HTMLElement {
         text-align: center;
       }
       .footer {
-        padding-top: 8px;
+        position: absolute;
+        right: 20px;
+        bottom: 20px;
         color: var(--accent-color);
         font-size: calc(0.72rem + 2px);
         text-align: right;
