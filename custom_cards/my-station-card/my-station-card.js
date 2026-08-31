@@ -190,8 +190,11 @@ class MyStationCard extends HTMLElement {
       headings.push(labels.status);
     }
 
-    for (const heading of headings) {
+    for (const [index, heading] of headings.entries()) {
       const cell = document.createElement("th");
+      if (this._config.show_status && index === headings.length - 1) {
+        cell.className = "status-column";
+      }
       cell.textContent = heading;
       headerRow.append(cell);
     }
@@ -222,6 +225,7 @@ class MyStationCard extends HTMLElement {
           ? item.status
           : "on_time";
         const cell = document.createElement("td");
+        cell.className = "status-column";
         const badge = document.createElement("span");
         badge.className = `status ${status}`;
         badge.textContent = labels[status];
@@ -284,6 +288,7 @@ class MyStationCard extends HTMLElement {
         min-height: 0;
       }
       ha-card {
+        position: relative;
         overflow: hidden;
         width: 100%;
         height: 100%;
@@ -295,14 +300,14 @@ class MyStationCard extends HTMLElement {
         flex: 1 1 auto;
         display: flex;
         flex-direction: column;
+        height: 100%;
         width: 100%;
         min-height: 0;
         box-sizing: border-box;
-        padding: 0 16px 12px;
+        padding: 0 20px 12px 16px;
       }
       .wrapper.has-footer {
-        padding-right: 20px;
-        padding-bottom: 20px;
+        padding-bottom: 48px;
       }
       .departure-content {
         flex: 0 1 auto;
@@ -347,9 +352,12 @@ class MyStationCard extends HTMLElement {
       td:first-child {
         padding-left: 0;
       }
-      th:last-child,
-      td:last-child {
+      th.status-column,
+      td.status-column {
         padding-right: 0;
+        width: 1%;
+        white-space: nowrap;
+        text-align: right;
       }
       tbody tr:last-child td {
         border-bottom: 0;
@@ -416,10 +424,9 @@ class MyStationCard extends HTMLElement {
         text-align: center;
       }
       .footer {
-        flex: 0 0 auto;
-        align-self: flex-end;
-        margin-top: auto;
-        padding-top: 8px;
+        position: absolute;
+        right: 20px;
+        bottom: 20px;
         color: var(--accent-color);
         font-size: calc(0.72rem + 2px);
         text-align: right;
