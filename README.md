@@ -93,7 +93,7 @@ type: custom:my-station-card
 entity: sensor.my_station_departures
 title: Herfølge St. - Departures
 icon: mdi:train
-icon_size: 30
+icon_size: 32
 max_rows: 8
 show_status: true
 show_updated: true
@@ -106,7 +106,7 @@ Card options:
 | `entity` | yes | none | My Station sensor entity ID |
 | `title` | no | Departures | Card heading; use an empty string to hide it |
 | `icon` | no | `mdi:train` | Icon shown to the left of the title; use an empty string to hide it |
-| `icon_size` | no | 30 | Icon size in pixels, from 1 to 100 |
+| `icon_size` | no | 32 | Icon size in pixels, from 1 to 100 |
 | `max_rows` | no | 8 | Rows to display, from 1 to 100 |
 | `show_status` | no | `true` | Show the status badge column |
 | `show_updated` | no | `true` | Show the payload update time |

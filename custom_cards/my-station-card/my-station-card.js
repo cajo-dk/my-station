@@ -16,7 +16,7 @@ class MyStationCard extends HTMLElement {
       entity: entity || "",
       title: "Departures",
       icon: "mdi:train",
-      icon_size: 30,
+      icon_size: 32,
       max_rows: 8,
     };
   }
@@ -31,7 +31,7 @@ class MyStationCard extends HTMLElement {
       throw new Error("max_rows must be an integer from 1 to 100");
     }
 
-    const iconSize = Number(config.icon_size ?? 30);
+    const iconSize = Number(config.icon_size ?? 32);
     if (!Number.isInteger(iconSize) || iconSize < 1 || iconSize > 100) {
       throw new Error("icon_size must be an integer from 1 to 100");
     }
@@ -134,6 +134,7 @@ class MyStationCard extends HTMLElement {
       }
 
       const title = document.createElement("span");
+      title.className = "title-name";
       title.textContent = this._config.title;
       header.append(title);
       wrapper.append(header);
@@ -315,19 +316,23 @@ class MyStationCard extends HTMLElement {
         overflow-y: auto;
       }
       .card-header {
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        display: grid;
+        grid-template-columns: auto 1fr;
         padding: 16px 0 8px;
-        font-size: calc(var(--ha-card-header-font-size, 24px) + 2px);
-        font-weight: 500;
         line-height: 1.2;
+      }
+      .title-name {
+        place-self: center start;
+        padding: 0 0 0 10px;
+        font-size: 16px;
+        font-weight: 500;
       }
       .title-icon {
         flex: 0 0 auto;
-        width: var(--my-station-title-icon-size, 30px);
-        height: var(--my-station-title-icon-size, 30px);
-        --mdc-icon-size: var(--my-station-title-icon-size, 30px);
+        width: var(--my-station-title-icon-size, 32px);
+        height: var(--my-station-title-icon-size, 32px);
+        color: orange;
+        --mdc-icon-size: var(--my-station-title-icon-size, 32px);
       }
       table {
         width: 100%;
