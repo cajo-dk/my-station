@@ -40,6 +40,8 @@ jobs:
           node-version: "20"
       - name: Compile Python
         run: python -m compileall -q custom_components
+      - name: Test dashboard resource registration
+        run: python tests/test_resource_registration.py
       - name: Check card syntax
         run: node --check custom_cards/my-station-card/my-station-card.js
       - name: Verify packaged card

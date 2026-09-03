@@ -79,12 +79,19 @@ The exact entity ID is assigned by Home Assistant and can be copied from the int
 
 ## Add the Lovelace card
 
-After the integration has been configured, add its bundled JavaScript file as a dashboard resource:
+After the integration has been configured, My Station automatically registers
+its bundled JavaScript file as a dashboard resource when Lovelace resources are
+managed through the Home Assistant UI. Restart Home Assistant after installing
+or upgrading the integration, then refresh the browser.
 
-1. Go to **Settings -> Dashboards**.
-2. Open the three-dot menu, then **Resources**.
-3. Add `/my_station/my-station-card.js` as a **JavaScript module**.
-4. Refresh the browser.
+If resources are managed in YAML mode, add the resource manually:
+
+```yaml
+lovelace:
+  resources:
+    - url: /my_station/my-station-card.js
+      type: module
+```
 
 Add the card in YAML mode:
 

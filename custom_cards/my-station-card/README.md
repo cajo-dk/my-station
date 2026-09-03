@@ -2,7 +2,9 @@
 
 Compact Lovelace card for the `items` attribute exposed by the My Station sensor.
 
-The integration bundles this file at `/my_station/my-station-card.js`. Add that URL as a JavaScript module under **Settings -> Dashboards -> Resources**, then use:
+The integration bundles this file at `/my_station/my-station-card.js` and
+automatically registers it as a dashboard resource in storage mode. YAML-managed
+resource lists must add that URL manually as a JavaScript module. Then use:
 
 ```yaml
 type: custom:my-station-card
